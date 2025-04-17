@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import Card from "../Card/Card";
 import Item from "../Item/Item";
 import Prepar from "../Prepar/Prepar";
+import { ToastContainer, toast ,Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Main = () => {
+    const notify = () => toast.success('Thank You Sir ! Your Request Has Been Submitted Successfully.');
+    const notify1 = () => toast.success('Your Order Is Preparing');
 
     const [cookingitem , setcookingitem] = useState([]);
     const [orderitem,setorderitem] = useState([]);
@@ -25,10 +29,15 @@ const Main = () => {
     const wanttocook = (data) => {
         const copydata = [...orderitem,data]
         setorderitem(copydata);
+        notify();
     }
-    const preparingfunc = (data) => {
+    const preparingfunc = (data,idxa) => {
         const copydata = [...preparitem,data]
         setpreparitem(copydata);
+        notify1();
+        
+        const removeitem = orderitem.filter((_,idx) => idx !== idxa)
+        setorderitem(removeitem);
 
         countfunc(data);
         timecountfunc(data);
@@ -43,6 +52,19 @@ const Main = () => {
 
     return (
         <div>
+             <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce}
+            />
             <div className="text-center space-y-5 mt-10">
                 <h1 className="font-bold text-3xl">Our Recipes</h1>
                 <p className="font-medium text-[#00000080]">Lorem ipsum dolor sit amet consectetur. Proin et feugiat senectus vulputate netus pharetra rhoncus. Eget <br />urna volutpat curabitur elementum mauris aenean neque. </p>
@@ -66,7 +88,7 @@ const Main = () => {
                             </thead>
                             <tbody>
                                 {
-                                    orderitem.map((item,idx) => (<Item key={idx} item={item} preparingfunc={preparingfunc}></Item>))
+                                    orderitem.map((item,idx) => (<Item key={idx} item={item} idx={idx} preparingfunc={preparingfunc}></Item>))
                                 }
                             </tbody>
                         </table>
@@ -101,6 +123,7 @@ const Main = () => {
                 </div>
             </div>
         </div>
+        
     );
 };
 
